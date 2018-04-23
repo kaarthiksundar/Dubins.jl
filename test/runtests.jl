@@ -3,7 +3,7 @@ using Memento
 
 setlevel!(getlogger(Dubins), "error")
 
-using Base.test
+using Base.Test
 
 @testset "Dubins" begin
     include("test1.jl")
