@@ -8,7 +8,7 @@ using Compat
 import Compat: @__MODULE__
 
 const LOGGER = getlogger(@__MODULE__)
-setlevel!(LOGGER, info)
+setlevel!(LOGGER, "info")
 
 __init__() = Memento.register(LOGGER)
 
