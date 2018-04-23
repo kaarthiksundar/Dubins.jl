@@ -3,6 +3,9 @@ isdefined(Base, :__precompile__) && __precompile__()
 module Dubins
 
 using Memento
+using Compat
+
+import Compat: @__MODULE__
 
 const LOGGER = getlogger(@__MODULE__)
 setlevel!(LOGGER, info)
