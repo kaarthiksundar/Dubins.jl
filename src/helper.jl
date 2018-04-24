@@ -1,3 +1,7 @@
+export 
+    DubinsPathType, SegmentType
+
+
 @enum DubinsPathType LSL LSR RSL RSR RLR LRL
 @enum SegmentType L_SEG S_SEG R_SEG
 
