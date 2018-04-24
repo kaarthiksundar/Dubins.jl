@@ -12,6 +12,8 @@ setlevel!(LOGGER, "info")
 
 __init__() = Memento.register(LOGGER)
 
-include("helper.jl")
+include("typedefs.jl")
+include("paths.jl")
+include("path_fcns.jl")
 
 end
