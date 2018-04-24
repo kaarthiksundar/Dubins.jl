@@ -1,5 +1,6 @@
 export 
-    DubinsPathType, SegmentType, DubinsPath,
+    DubinsPathType, SegmentType, DubinsPath, 
+    LSL, LSR, RSL, RSR, RLR, LRL,
     EDUBOK, EDUBCOCONFIGS, EDUBPARAM, EDUBBADRHO, EDUBNOPATH
 
 @enum DubinsPathType LSL LSR RSL RSR RLR LRL
