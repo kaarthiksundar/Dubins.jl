@@ -6,5 +6,5 @@ setlevel!(getlogger(Dubins), "error")
 using Base.Test
 
 @testset "Dubins" begin
-    include("test_full.jl")
+    include("test_api.jl")
 end
