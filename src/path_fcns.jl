@@ -3,7 +3,9 @@ export
     dubins_shortest_path, dubins_path, 
     dubins_path_length, dubins_segment_length,
     dubins_segment_length_normalized,
-    dubins_path_type 
+    dubins_path_type, dubins_path_sample, 
+    dubins_path_sample_many, dubins_path_endpoint,
+    dubins_extract_subpath
 
 """
 Generate a path from an initial configuration to a target configuration with a specified maximum turning radius

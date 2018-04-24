@@ -19,7 +19,7 @@ end
 
 @testset "test path length" begin
     path = DubinsPath()
-    errcode = dubins_shortest_path(path, zeros(3), [4., 0., 0.], 1., LRL)
+    errcode = dubins_shortest_path(path, zeros(3), [4., 0., 0.], 1.)
     @test errcode == EDUBNOPATH
     path_length = dubins_path_length(path)
     @test isapprox(path_length, 4., atol=1e-3)
