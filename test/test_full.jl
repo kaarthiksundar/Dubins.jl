@@ -20,7 +20,7 @@ end
 @testset "test path length" begin
     path = DubinsPath()
     errcode = dubins_shortest_path(path, zeros(3), [4., 0., 0.], 1.)
-    @test errcode == EDUBNOPATH
+    @test errcode == EDUBOK
     path_length = dubins_path_length(path)
     @test isapprox(path_length, 4., atol=1e-3)
 end
@@ -40,7 +40,7 @@ end
     @test dubins_segment_length_normalized(path, 2) == 4.
     @test dubins_segment_length_normalized(path, 3) == 0.
     @test dubins_segment_length_normalized(path, 4) == Inf
-end 
+end
 
 @testset "test sample" begin
     path = DubinsPath()
@@ -52,10 +52,11 @@ end
     @test errcode == EDUBOK
     @test qsamp == zeros(3)
 
-    errcode = dubins_path_sample(path, 0., qsamp)
+    qsamp = zeros(3)
+    errcode = dubins_path_sample(path, 4., qsamp)
     @test errcode == EDUBOK
     @test qsamp == [4., 0., 0.]
-end 
+end
 
 @testset "test sample out of bounds" begin
     path = DubinsPath()
@@ -68,7 +69,7 @@ end
 
     errcode = dubins_path_sample(path, 5., qsamp)
     @test errcode == EDUBPARAM
-end 
+end
 
 @testset "test sample many LSL" begin
     path = DubinsPath()
@@ -78,7 +79,7 @@ end
     nop_cb(q::Vector{Float64}, x::Float64; kwargs...) = 0
     errcode = dubins_path_sample_many(path, 1., nop_cb)
     @test errcode == 0
-end 
+end
 
 @testset "test sample many RLR" begin
     path = DubinsPath()
@@ -88,7 +89,7 @@ end
     nop_cb(q::Vector{Float64}, x::Float64; kwargs...) = 0
     errcode = dubins_path_sample_many(path, 1., nop_cb)
     @test errcode == 0
-end 
+end
 
 @testset "test sample many opt-out early" begin
     path = DubinsPath()
@@ -107,39 +108,38 @@ end
         errcode = dubins_path(path, zeros(3), [1., 0., 0.], 1., path_type)
         (errcode == EDUBOK) && (@test dubins_path_type(path) == path_type)
     end
-end 
+end
 
 @testset "test end point" begin
     path = DubinsPath()
     errcode = dubins_path(path, zeros(3), [4., 0., 0.], 1., LSL)
     @test errcode == EDUBOK
-    
+
     qsamp = zeros(3)
     errcode = dubins_path_endpoint(path, qsamp)
-    @test isapprox(qsamp, [4., 0., 0.], atol=10e-8)
-end 
+    @test isapprox(qsamp, [4., 0., 0.], atol=1e-8)
+end
 
 @testset "test extract sub-path" begin
     path = DubinsPath()
     errcode = dubins_path(path, zeros(3), [4., 0., 0.], 1., LSL)
     @test errcode == EDUBOK
-    
+
     subpath = DubinsPath()
     errcode = dubins_extract_subpath(path, 2., subpath)
     @test errcode == EDUBOK
-    
+
     qsamp = zeros(3)
-    errcode = dubins_path_endpoint(path, qsamp)
-    @test isapprox(qsamp, [2., 0., 0.], atol=10e-8)
-end 
+    errcode = dubins_path_endpoint(subpath, qsamp)
+    @test isapprox(qsamp, [2., 0., 0.], atol=1e-8)
+end
 
 @testset "test extract invalid sub-path" begin
     path = DubinsPath()
     errcode = dubins_path(path, zeros(3), [4., 0., 0.], 1., LSL)
     @test errcode == EDUBOK
-    
+
     subpath = DubinsPath()
     errcode = dubins_extract_subpath(path, 8., subpath)
-    @test errcode == EDUBPARAM   
-end 
-
+    @test errcode == EDUBPARAM
+end

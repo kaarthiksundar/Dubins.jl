@@ -1,5 +1,5 @@
-export 
-    DubinsPathType, SegmentType, DubinsPath, 
+export
+    DubinsPathType, SegmentType, DubinsPath,
     LSL, LSR, RSL, RSR, RLR, LRL,
     EDUBOK, EDUBCOCONFIGS, EDUBPARAM, EDUBBADRHO, EDUBNOPATH
 
@@ -29,19 +29,19 @@ type DubinsPath
     qi::Vector{Float64}            # the initial configuration
     params::Vector{Float64}        # the lengths of the three segments
     ρ::Float64                     # turn radius
-    path_type::DubinsPathType   # the path type 
+    path_type::DubinsPathType   # the path type
 end
 
 """
-Empty constructor for the DubinsPath type 
+Empty constructor for the DubinsPath type
 """
 DubinsPath() = DubinsPath(zeros(3), zeros(3), 1., LSL)
 
 """
-This data structure holds the information to compute the Dubins path 
-in the transformed coordinates where the initial (x,y) is translated to the 
-origin, the final the coordinate axis is rotated to make the x-axis aligned with 
-the line joining the two points. The variable names follow the convention used 
+This data structure holds the information to compute the Dubins path
+in the transformed coordinates where the initial (x,y) is translated to the
+origin, the final the coordinate axis is rotated to make the x-axis aligned with
+the line joining the two points. The variable names follow the convention used
 in the paper "Classification of the Dubins set" by Andrei M. Shkel and Vladimir Lumelsky
 """
 type DubinsIntermediateResults
@@ -60,7 +60,7 @@ end
 Empty constructor for the DubinsIntermediateResults data type
 """
 function DubinsIntermediateResults(q0::Vector{Float64}, q1::Vector{Float64}, ρ::Float64)
-    
+
     ir = DubinsIntermediateResults(0., 0., 0., 0., 0., 0., 0., 0., 0.)
 
     dx = q1[1] - q0[1]
@@ -94,4 +94,4 @@ const EDUBCOCONFIGS = 1         # colocated configurations
 const EDUBPARAM = 2             # path parameterization error
 const EDUBBADRHO = 3            # the rho value is invalid
 const EDUBNOPATH = 4            # no connection between configurations with this word
-const TOL = 10e-10              # tolerance
+const TOL = 1e-10              # tolerance

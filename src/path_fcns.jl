@@ -1,16 +1,16 @@
 
-export 
-    dubins_shortest_path, dubins_path, 
+export
+    dubins_shortest_path, dubins_path,
     dubins_path_length, dubins_segment_length,
     dubins_segment_length_normalized,
-    dubins_path_type, dubins_path_sample, 
+    dubins_path_type, dubins_path_sample,
     dubins_path_sample_many, dubins_path_endpoint,
     dubins_extract_subpath
 
 """
 Generate a path from an initial configuration to a target configuration with a specified maximum turning radius
 
-A configuration is given by [x, y, θ], where θ is in radians, 
+A configuration is given by [x, y, θ], where θ is in radians,
 
 * path      - resultant path
 * q0        - a configuration specified by a 3-element vector [x, y, θ]
@@ -128,7 +128,7 @@ Extract the integer that represents which path type was used
 dubins_path_type(path::DubinsPath) = path.path_type
 
 """
-Operators that transform an arbitrary point qi, [x, y, θ], into an image point. 
+Operators that transform an arbitrary point qi, [x, y, θ], into an image point.
 
 The three operators correspond to L_SEG, R_SEG, and S_SEG
 
@@ -138,7 +138,6 @@ The three operators correspond to L_SEG, R_SEG, and S_SEG
 """
 function dubins_segment(t::Float64, qi::Vector{Float64}, qt::Vector{Float64}, segment_type::SegmentType)
 
-    qt = zeros(3)
     st = sin(qi[3])
     ct = cos(qi[3])
 
@@ -155,7 +154,9 @@ function dubins_segment(t::Float64, qi::Vector{Float64}, qt::Vector{Float64}, se
         qt[2] = st * t
         qt[3] = 0.0
     end
-    qt = qt + qi
+    qt[1] = qt[1] + qi[1]
+    qt[2] = qt[2] + qi[2]
+    qt[3] = qt[3] + qi[3]
 
     return
 end
@@ -169,7 +170,7 @@ Calculate the configuration along the path, using the parameter t
  * return    - non-zero error code if 't' is not in the correct range
 """
 function dubins_path_sample(path::DubinsPath, t::Float64, q::Vector{Float64})
-    
+
     # tprime is the normalized variant of the parameter t
     tprime = t/path.ρ
     qi = zeros(3)
@@ -212,14 +213,14 @@ The sampling process continues until the whole path is sampled, or the callback 
  * path         - the path to sample
  * step_size    - the distance along the path for subsequent samples
  * cb           - the callback function to call for each sample
- * return       - error code 
+ * return       - error code
  """
 function dubins_path_sample_many(path::DubinsPath, step_size::Float64, cb_function; kwargs...)
-    
+
     q = zeros(3)
     x = 0.
     length = dubins_path_length(path)
-    
+
     while x < length
         dubins_path_sample(path, x, q)
         retcode = cb_function(q, x; kwargs...)
@@ -237,7 +238,9 @@ Convenience function to identify the endpoint of a path
  * q             - the end point
  * return        - zero on successful completion
 """
-dubins_path_endpoint(path::DubinsPath, q::Vector{Float64}) = dubins_path_sample(path, dubins_path_length(path) - TOL, q)
+function dubins_path_endpoint(path::DubinsPath, q::Vector{Float64})
+    return dubins_path_sample(path, dubins_path_length(path) - TOL, q)
+end
 
 """
 Convenience function to extract a sub-path
@@ -262,10 +265,10 @@ function dubins_extract_subpath(path::DubinsPath, t::Float64, newpath::DubinsPat
     newpath.path_type = path.path_type
 
     # fix the parameters
-    newpath.params[1] = min(path.param[1], tprime)
-    newpath.params[2] = min(path.param[2], tprime - newpath.param[1])
-    newpath.params[3] = min(path.param[3], tprime - newpath.param[1] - newpath.param[2])
-    
+    newpath.params[1] = min(path.params[1], tprime)
+    newpath.params[2] = min(path.params[2], tprime - newpath.params[1])
+    newpath.params[3] = min(path.params[3], tprime - newpath.params[1] - newpath.params[2])
+
     return EDUBOK
 end
 
@@ -276,7 +279,7 @@ The function to call the corresponding Dubins path based on the path_type
 * return        - error code; zero on successful completion
 """
 function dubins_word(intermediate_results::DubinsIntermediateResults, path_type::DubinsPathType, out::Vector{Float64})
-    
+
     result::Int = 0
     if path_type == LSL
         result = dubins_LSL(intermediate_results, out)
@@ -293,6 +296,6 @@ function dubins_word(intermediate_results::DubinsIntermediateResults, path_type:
     else
         result = EDUBNOPATH
     end
-    
+
     return result
 end
