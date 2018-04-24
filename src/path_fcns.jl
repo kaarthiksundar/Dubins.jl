@@ -136,6 +136,7 @@ The three operators correspond to L_SEG, R_SEG, and S_SEG
 """
 function dubins_segment(t::Float64, qi::Vector{Float64}, qt::Vector{Float64}, segment_type::SegmentType)
 
+    qt = zeros(3)
     st = sin(qi[3])
     ct = cos(qi[3])
 
@@ -166,7 +167,7 @@ Calculate the configuration along the path, using the parameter t
  * return    - non-zero error code if 't' is not in the correct range
 """
 function dubins_path_sample(path::DubinsPath, t::Float64, q::Vector{Float64})
-
+    
     # tprime is the normalized variant of the parameter t
     tprime = t/path.ρ
     qi = zeros(3)
@@ -262,7 +263,8 @@ function dubins_extract_subpath(path::DubinsPath, t::Float64, newpath::DubinsPat
     newpath.params[1] = min(path.param[1], tprime)
     newpath.params[2] = min(path.param[2], tprime - newpath.param[1])
     newpath.params[3] = min(path.param[3], tprime - newpath.param[1] - newpath.param[2])
-    return 0
+    
+    return EDUBOK
 end
 
 
