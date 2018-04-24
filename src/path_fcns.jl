@@ -171,6 +171,8 @@ Calculate the configuration along the path, using the parameter t
 """
 function dubins_path_sample(path::DubinsPath, t::Float64, q::Vector{Float64})
 
+    (length(q) != 3) && ( warn(LOGGER, "q must be of length 3; returning EDUBBADINPUT"); return EDUBBADINPUT)
+
     # tprime is the normalized variant of the parameter t
     tprime = t/path.ρ
     qi = zeros(3)

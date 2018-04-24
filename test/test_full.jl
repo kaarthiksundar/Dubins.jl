@@ -47,6 +47,10 @@ end
     errcode = dubins_path(path, zeros(3), [4., 0., 0.], 1., LSL)
     @test errcode == EDUBOK
 
+    qsamp = Vector{Float64}()
+    errcode = dubins_path_sample(path, 0., qsamp)
+    @test errcode == EDUBBADINPUT
+
     qsamp = zeros(3)
     errcode = dubins_path_sample(path, 0., qsamp)
     @test errcode == EDUBOK

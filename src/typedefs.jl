@@ -1,7 +1,7 @@
 export
     DubinsPathType, SegmentType, DubinsPath,
     LSL, LSR, RSL, RSR, RLR, LRL,
-    EDUBOK, EDUBCOCONFIGS, EDUBPARAM, EDUBBADRHO, EDUBNOPATH
+    EDUBOK, EDUBCOCONFIGS, EDUBPARAM, EDUBBADRHO, EDUBNOPATH, EDUBBADINPUT
 
 @enum DubinsPathType LSL LSR RSL RSR RLR LRL
 @enum SegmentType L_SEG S_SEG R_SEG
@@ -94,4 +94,5 @@ const EDUBCOCONFIGS = 1         # colocated configurations
 const EDUBPARAM = 2             # path parameterization error
 const EDUBBADRHO = 3            # the rho value is invalid
 const EDUBNOPATH = 4            # no connection between configurations with this word
-const TOL = 1e-10              # tolerance
+const EDUBBADINPUT = 5            # uninitialized inputs to functions
+const TOL = 1e-10               # tolerance
