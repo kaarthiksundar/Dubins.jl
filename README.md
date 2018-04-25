@@ -8,6 +8,8 @@ Dubins.jl is a Julia package for computing the shortest path between two configu
 
 All the unit tests and the data structures in this Julia implementation is borrowed from the [C implementation](https://github.com/AndrewWalker/Dubins-Curves) and its corresponding [python wrapper](https://github.com/AndrewWalker/pydubins).
 
+## Bugs and support
+Please report any issues or feature requests via the Github **[issue tracker]**.
 
 ## License
 MIT License. See LICENSE.txt for details.

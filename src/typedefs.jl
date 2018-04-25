@@ -86,9 +86,6 @@ function DubinsIntermediateResults(q0::Vector{Float64}, q1::Vector{Float64}, ρ:
     return ir
 end
 
-"""
-Error code definitions
-"""
 const EDUBOK = 0                # no error
 const EDUBCOCONFIGS = 1         # colocated configurations
 const EDUBPARAM = 2             # path parameterization error
