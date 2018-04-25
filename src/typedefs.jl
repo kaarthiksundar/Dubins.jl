@@ -94,5 +94,5 @@ const EDUBCOCONFIGS = 1         # colocated configurations
 const EDUBPARAM = 2             # path parameterization error
 const EDUBBADRHO = 3            # the rho value is invalid
 const EDUBNOPATH = 4            # no connection between configurations with this word
-const EDUBBADINPUT = 5            # uninitialized inputs to functions
-const TOL = 1e-10               # tolerance
+const EDUBBADINPUT = 5          # uninitialized inputs to functions
+TOL = 1e-10                     # tolerance

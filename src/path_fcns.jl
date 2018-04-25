@@ -301,3 +301,11 @@ function dubins_word(intermediate_results::DubinsIntermediateResults, path_type:
 
     return result
 end
+
+"""
+Reset tolerance value
+"""
+function set_tolerance(ϵ::Float64)
+    TOL = ϵ
+    return
+end
