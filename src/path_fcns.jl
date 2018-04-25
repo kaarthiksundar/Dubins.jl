@@ -191,7 +191,7 @@ function dubins_path_sample(path::DubinsPath, t::Float64, q::Vector{Float64})
     dubins_segment(p1, qi, q1, segment_types[1])
     dubins_segment(p2, q1, q2, segment_types[2])
     if tprime < p1
-        dubins_segment(tprime, q1, q, segment_types[1])
+        dubins_segment(tprime, qi, q, segment_types[1])
     elseif tprime < (p1+p2)
         dubins_segment(tprime-p1, q1, q, segment_types[2])
     else
