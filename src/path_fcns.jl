@@ -12,18 +12,19 @@ Generate a path from an initial configuration to a target configuration with a s
 
 A configuration is given by [x, y, θ], where θ is in radians,
 
-* path      - resultant path
 * q0        - a configuration specified by a 3-element vector [x, y, θ]
 * q1        - a configuration specified by a 3-element vector [x, y, θ]
-* rho       - turning radius of the vehicle
-* return    - error code
+* ρ         - turning radius of the vehicle
+* return    - tuple (error code, dubins path). If error code != 0, then `nothing` is returned as the second argument
 """
-function dubins_shortest_path(path::DubinsPath, q0::Vector{Float64}, q1::Vector{Float64}, ρ::Float64)
+function dubins_shortest_path(q0::Vector{Float64}, q1::Vector{Float64}, ρ::Float64)
 
     # input checking
     @assert length(q0) ==  3
     @assert length(q1) == 3
-    (ρ <= 0) && (return EDUBBADRHO)
+    (ρ <= 0) && (return EDUBBADRHO, nothing)
+
+    path = DubinsPath()
 
     params = zeros(3)
 
@@ -38,7 +39,7 @@ function dubins_shortest_path(path::DubinsPath, q0::Vector{Float64}, q1::Vector{
 
     for i in 0:5
         path_type = DubinsPathType(i)
-        errcode = dubins_word(intermediate_results, path_type, params)
+        errcode, params = dubins_word(intermediate_results, path_type)
         if errcode == EDUBOK
             cost = sum(params)
             if cost < best_cost
@@ -52,31 +53,32 @@ function dubins_shortest_path(path::DubinsPath, q0::Vector{Float64}, q1::Vector{
         end
     end
 
-    (best_word == -1) && (return EDUBNOPATH)
-    return EDUBOK
+    (best_word == -1) && (return EDUBNOPATH, nothing)
+    return EDUBOK, path
 end
 
 """
 Generate a path with a specified word from an initial configuratioon to a target configuration, with a specified turning radius
 
-* path      - resultant path
 * q0        - a configuration specified by a 3-element vector x, y, theta
 * q1        - a configuration specified by a 3-element vector x, y, theta
-* rho       - turning radius of the vehicle
+* ρ         - turning radius of the vehicle
 * path_type - the specified path type to use
-* return    - error code
+* return    - tuple (error code, dubins path). If error code != 0, then `nothing` is returned as the second argument
 """
-function dubins_path(path::DubinsPath, q0::Vector{Float64}, q1::Vector{Float64}, ρ::Float64, path_type::DubinsPathType)
+function dubins_path(q0::Vector{Float64}, q1::Vector{Float64}, ρ::Float64, path_type::DubinsPathType)
 
     # input checking
     @assert length(q0) ==  3
     @assert length(q1) == 3
-    (ρ <= 0) && (return EDUBBADRHO)
+    (ρ <= 0) && (return EDUBBADRHO, nothing)
+
+    path = DubinsPath()
 
     intermediate_results = DubinsIntermediateResults(q0, q1, ρ)
 
     params = zeros(3)
-    errcode = dubins_word(intermediate_results, path_type, params)
+    errcode, params = dubins_word(intermediate_results, path_type)
     if errcode == EDUBOK
         path.params[1] = params[1]
         path.params[2] = params[2]
@@ -88,7 +90,8 @@ function dubins_path(path::DubinsPath, q0::Vector{Float64}, q1::Vector{Float64},
         path.path_type = path_type
     end
 
-    return errcode
+    (errcode != EDUBOK) && (return errcode, nothing)
+    return errcode, path
 end
 
 
@@ -128,16 +131,19 @@ Extract the integer that represents which path type was used
 dubins_path_type(path::DubinsPath) = path.path_type
 
 """
-Operators that transform an arbitrary point qi, [x, y, θ], into an image point.
+Operators that transform an arbitrary point qi, [x, y, θ], into an image point given a parameter t and segment type
 
 The three operators correspond to L_SEG, R_SEG, and S_SEG
 
  * L_SEG(x, y, θ, t) = [x, y, θ] + [ sin(θ + t) - sin(θ), -cos(θ + t) + cos(θ),  t]
  * R_SEG(x, y, θ, t) = [x, y, θ] + [-sin(θ - t) + sin(θ),  cos(θ - t) - cos(θ), -t]
  * S_SEG(x, y, θ, t) = [x, y, θ] + [ cos(θ) * t,           sin(θ) * t,           0]
-"""
-function dubins_segment(t::Float64, qi::Vector{Float64}, qt::Vector{Float64}, segment_type::SegmentType)
 
+ * return    -  the image point as a 3-element vector
+"""
+function dubins_segment(t::Float64, qi::Vector{Float64}, segment_type::SegmentType)
+
+    qt = zeros(3)
     st = sin(qi[3])
     ct = cos(qi[3])
 
@@ -158,7 +164,7 @@ function dubins_segment(t::Float64, qi::Vector{Float64}, qt::Vector{Float64}, se
     qt[2] = qt[2] + qi[2]
     qt[3] = qt[3] + qi[3]
 
-    return
+    return qt
 end
 
 """
@@ -166,21 +172,17 @@ Calculate the configuration along the path, using the parameter t
 
  * path      - an initialized path
  * t         - length measure where 0 <= t < dubins_path_length(path)
- * q         - the configuration result [x, y, θ]
- * return    - non-zero error code if 't' is not in the correct range
+ * return    - tuple containing non-zero error code if 't' is not in the correct range and the configuration result [x, y, θ]
 """
-function dubins_path_sample(path::DubinsPath, t::Float64, q::Vector{Float64})
-
-    (length(q) != 3) && ( warn(LOGGER, "q must be of length 3; returning EDUBBADINPUT"); return EDUBBADINPUT)
+function dubins_path_sample(path::DubinsPath, t::Float64)
 
     # tprime is the normalized variant of the parameter t
     tprime = t/path.ρ
     qi = zeros(3)
-    q1 = zeros(3)
-    q2 = zeros(3)
+    q = zeros(3)
     segment_types = DIRDATA[Int(path.path_type)]
 
-    (t < 0 || t > dubins_path_length(path)) && (return EDUBPARAM)
+    (t < 0 || t > dubins_path_length(path)) && (return EDUBPARAM, nothing)
 
     # initial configuration
     qi = [0.0, 0.0, path.qi[3]]
@@ -188,14 +190,14 @@ function dubins_path_sample(path::DubinsPath, t::Float64, q::Vector{Float64})
     # generate target configuration
     p1 = path.params[1]
     p2 = path.params[2]
-    dubins_segment(p1, qi, q1, segment_types[1])
-    dubins_segment(p2, q1, q2, segment_types[2])
+    q1 = dubins_segment(p1, qi, segment_types[1])
+    q2 = dubins_segment(p2, q1, segment_types[2])
     if tprime < p1
-        dubins_segment(tprime, qi, q, segment_types[1])
+        q = dubins_segment(tprime, qi, segment_types[1])
     elseif tprime < (p1+p2)
-        dubins_segment(tprime-p1, q1, q, segment_types[2])
+        q = dubins_segment(tprime-p1, q1, segment_types[2])
     else
-        dubins_segment(tprime-p1-p2, q2, q, segment_types[3])
+        q = dubins_segment(tprime-p1-p2, q2, segment_types[3])
     end
 
     # scale the target configuration, translate back to the original starting point
@@ -203,7 +205,7 @@ function dubins_path_sample(path::DubinsPath, t::Float64, q::Vector{Float64})
     q[1] = q[1] * path.ρ + path.qi[2]
     q[3] = mod2pi(q[3]);
 
-    return EDUBOK;
+    return EDUBOK, q
 end
 
 
@@ -214,50 +216,52 @@ The sampling process continues until the whole path is sampled, or the callback 
 
  * path         - the path to sample
  * step_size    - the distance along the path for subsequent samples
- * cb           - the callback function to call for each sample
- * return       - error code
+
+ * return       - tuple (error code, configuration vector). If error code != 0, then `nothing` is returned as the second argument
  """
-function dubins_path_sample_many(path::DubinsPath, step_size::Float64, cb_function; kwargs...)
+function dubins_path_sample_many(path::DubinsPath, step_size::Float64)
 
     q = zeros(3)
+    configurations = []
     x = 0.
     length = dubins_path_length(path)
 
+    (step_size < 0 || step_size > length) && (return EDUBPARAM, nothing)
+
+
     while x < length
-        dubins_path_sample(path, x, q)
-        retcode = cb_function(q, x; kwargs...)
-        (retcode != 0) && (return retcode)
+        errcode, q = dubins_path_sample(path, x)
+        push!(configurations, q)
+        (errcode != 0) && (return errcode, nothing)
         x += step_size
     end
 
-    return 0
+    return EDUBOK, configurations
 end
 
 """
 Convenience function to identify the endpoint of a path
 
  * path          - an initialized path
- * q             - the end point
- * return        - zero on successful completion
+ * return        - tuple containing (zero on successful completion and the end configuration [x,y,Θ])
 """
-function dubins_path_endpoint(path::DubinsPath, q::Vector{Float64})
-    return dubins_path_sample(path, dubins_path_length(path) - TOL, q)
-end
+dubins_path_endpoint(path::DubinsPath) = dubins_path_sample(path, dubins_path_length(path) - TOL)
 
 """
 Convenience function to extract a sub-path
 
  * path          - an initialized path
  * t             - a length measure, where 0 < t < dubins_path_length(path)
- * newpath       - the resultant path
- * return        - zero on successful completion
+ * return        - zero on successful completion and the subpath
 """
-function dubins_extract_subpath(path::DubinsPath, t::Float64, newpath::DubinsPath)
+function dubins_extract_subpath(path::DubinsPath, t::Float64)
 
     # calculate the true parameter
     tprime = t / path.ρ;
 
-    ((t < 0) || (t > dubins_path_length(path))) && (return EDUBPARAM)
+    ((t < 0) || (t > dubins_path_length(path))) && (return EDUBPARAM, nothing)
+
+    newpath = DubinsPath()
 
     # copy most of the data
     newpath.qi[1] = path.qi[1]
@@ -271,35 +275,37 @@ function dubins_extract_subpath(path::DubinsPath, t::Float64, newpath::DubinsPat
     newpath.params[2] = min(path.params[2], tprime - newpath.params[1])
     newpath.params[3] = min(path.params[3], tprime - newpath.params[1] - newpath.params[2])
 
-    return EDUBOK
+    return EDUBOK, newpath
 end
 
 
 """
 The function to call the corresponding Dubins path based on the path_type
 
-* return        - error code; zero on successful completion
+* return        - tuple (error code, path length as a vector for corresponding path type)
 """
-function dubins_word(intermediate_results::DubinsIntermediateResults, path_type::DubinsPathType, out::Vector{Float64})
+function dubins_word(intermediate_results::DubinsIntermediateResults, path_type::DubinsPathType)
 
     result::Int = 0
+    out = Vector{Float64}(3)
     if path_type == LSL
-        result = dubins_LSL(intermediate_results, out)
+        result, out = dubins_LSL(intermediate_results)
     elseif path_type == RSL
-        result = dubins_RSL(intermediate_results, out)
+        result, out = dubins_RSL(intermediate_results)
     elseif path_type == LSR
-        result = dubins_LSR(intermediate_results, out)
+        result, out = dubins_LSR(intermediate_results)
     elseif path_type == RSR
-        result = dubins_RSR(intermediate_results, out)
+        result, out = dubins_RSR(intermediate_results)
     elseif path_type == LRL
-        result = dubins_LRL(intermediate_results, out)
+        result, out = dubins_LRL(intermediate_results)
     elseif path_type == RLR
-        result = dubins_RLR(intermediate_results, out)
+        result, out = dubins_RLR(intermediate_results)
     else
         result = EDUBNOPATH
     end
 
-    return result
+    (result == EDUBNOPATH) && (return result, nothing)
+    return result, out
 end
 
 """

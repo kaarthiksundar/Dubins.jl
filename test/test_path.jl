@@ -245,8 +245,7 @@ params = [
     ρ = 1.
     for i in 1:length(params)
         param = params[i]
-        path = DubinsPath()
-        errcode = dubins_path(path, [0., 0., param.inputs.α], [param.inputs.d, 0., param.inputs.β], ρ, param.inputs.word)
+        errcode, path = dubins_path([0., 0., param.inputs.α], [param.inputs.d, 0., param.inputs.β], ρ, param.inputs.word)
         (errcode != 0) && (errcode = 1)
         @test errcode == param.outputs.errcode
         (errcode == 0) && (@test isapprox(path.params, param.outputs.params, atol=1e-8))
