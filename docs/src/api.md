@@ -89,10 +89,10 @@ The second argument of the function `dubins_path_sample()` is a parameter that h
 
 As one can observe from the above code snippet, `dubins_path_sample()` samples the Dubins path only once. Sampling an entire Dubins path using a step size, can be achieved using the method `dubins_path_sample_many()`. The `dubins_path_sample_many()` takes in two arguments:
 
-1. the Dubins path that needs to be sampled,
-2. the step size denoting the distance along the path for subsequent samples, and
+1. the Dubins path that needs to be sampled, and
+2. the step size denoting the distance along the path for subsequent samples.
 
-The following code snippet samples a Dubins path using a step size and prints the configuration at each sample:
+The following code snippet samples a Dubins path using a step size:
 ```julia
 errcode, path = dubins_path([0., 0., 0.], [4., 0., 0.], 1., LSL)
 errcode, configurations = dubins_path_sample_many(path, 1.)
