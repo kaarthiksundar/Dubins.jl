@@ -1,5 +1,7 @@
 # Dubins.jl
 
+Release: [![Dubins](http://pkg.julialang.org/badges/Dubins_0.6.svg)](http://pkg.julialang.org/detail/Dubins) [![Dubins](http://pkg.julialang.org/badges/Dubins_0.7.svg)](http://pkg.julialang.org/detail/Dubins)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://kaarthiksundar.github.io/Dubins.jl/stable/)
 
 Dev: [![Build Status](https://travis-ci.org/kaarthiksundar/Dubins.jl.svg?branch=master)](https://travis-ci.org/kaarthiksundar/Dubins.jl)
 [![codecov](https://codecov.io/gh/kaarthiksundar/Dubins.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/kaarthiksundar/Dubins.jl)
