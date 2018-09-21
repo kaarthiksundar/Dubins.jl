@@ -1,14 +1,20 @@
 language: julia
 os:
   - linux
-#  - osx
+  - osx
 julia:
   - 0.6
   - nightly
+matrix:
+  allow_failures:
+    - julia: nightly
 
 before_install:
+  - julia -e 'if "Dubins" in keys(Pkg.installed()) Pkg.rm("Dubins"); Pkg.rm("Dubins") end'
+  - julia -e 'Pkg.update()'
   - julia -e 'if !("Coverage" in keys(Pkg.installed())) Pkg.add("Coverage") end'
   - julia -e 'if !("Documenter" in keys(Pkg.installed())) Pkg.add("Documenter") end'
+
 script:
   - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
   - julia -e 'Pkg.clone(pwd())'
