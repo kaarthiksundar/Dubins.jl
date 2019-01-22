@@ -1,9 +1,10 @@
 using Dubins
 using Memento
 
+using Compat.Test
+
 setlevel!(getlogger(Dubins), "error")
 
-using Base.Test
 
 @testset "Dubins" begin
     include("test_api.jl")
