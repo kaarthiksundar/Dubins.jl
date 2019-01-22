@@ -13,9 +13,5 @@ makedocs(
 )
 
 deploydocs(
-    deps = nothing,
-    make = nothing,
-    target = "build",
-    repo = "github.com/kaarthiksundar/Dubins.jl.git",
-    julia = "0.6"
+    repo = "github.com/kaarthiksundar/Dubins.jl.git"
 )
