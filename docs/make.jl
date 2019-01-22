@@ -2,7 +2,7 @@ using Documenter, Dubins
 
 makedocs(
     modules = [Dubins],
-    format = :html,
+    format = Documenter.HTML(),
     sitename = "Dubins",
     authors = "Kaarthik Sundar",
     pages = [
