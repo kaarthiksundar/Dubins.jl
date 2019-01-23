@@ -19,4 +19,4 @@ Please report any issues or feature requests via the Github [issue tracker].
 The detailed API documentation with examples can be found [here](https://kaarthiksundar.github.io/Dubins.jl/latest/).
 
 ## License
-MIT License. See LICENSE.txt for details.
+MIT License. See LICENSE file for details.
