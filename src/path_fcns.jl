@@ -287,7 +287,7 @@ The function to call the corresponding Dubins path based on the path_type
 function dubins_word(intermediate_results::DubinsIntermediateResults, path_type::DubinsPathType)
 
     result::Int = 0
-    out = Vector{Float64}(3)
+    out = Vector{Float64}(undef,3)
     if path_type == LSL
         result, out = dubins_LSL(intermediate_results)
     elseif path_type == RSL

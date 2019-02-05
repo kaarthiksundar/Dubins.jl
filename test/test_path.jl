@@ -1,18 +1,18 @@
 
-type Inputs
+mutable struct Inputs
     word::DubinsPathType
     α::Float64
     β::Float64
     d::Float64
 end
 
-type Outputs
+mutable struct Outputs
     errcode::Int
     params::Vector{Float64}
     len::Float64
 end
 
-type Param
+mutable struct Param
     inputs::Inputs
     outputs::Outputs
 end

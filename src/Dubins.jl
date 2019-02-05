@@ -5,6 +5,7 @@ module Dubins
 using Memento
 using Compat
 
+
 import Compat: @__MODULE__
 
 const LOGGER = getlogger(@__MODULE__)

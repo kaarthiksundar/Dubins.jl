@@ -3,23 +3,23 @@ os:
   - linux
   - osx
 julia:
-  - 0.6
+  - 0.7
+  - 1.0
   - nightly
-matrix:
-  allow_failures:
-    - julia: nightly
 
 before_install:
-  - julia -e 'if "Dubins" in keys(Pkg.installed()) Pkg.rm("Dubins"); Pkg.rm("Dubins") end'
-  - julia -e 'Pkg.update()'
-  - julia -e 'if !("Coverage" in keys(Pkg.installed())) Pkg.add("Coverage") end'
-  - julia -e 'if !("Documenter" in keys(Pkg.installed())) Pkg.add("Documenter") end'
+  - julia -e '(VERSION >= v"0.7" && using Pkg); Pkg.rm("Dubins"); Pkg.rm("Dubins")'
+  - julia -e '(VERSION >= v"0.7" && using Pkg); Pkg.update()'
 
-script:
-  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-  - julia -e 'Pkg.clone(pwd())'
-  - julia -e 'Pkg.test("Dubins", coverage=true)'
+after_success:  # post-processing, if the script passes with no errors
+  - julia -e '(VERSION >= v"0.7" && using Pkg); Pkg.add("Coverage"); cd(Pkg.dir("Dubins")); using Coverage; Codecov.submit(process_folder())'
 
-after_success:
-  - julia -e  'using Coverage; cd(Pkg.dir("Dubins")); LCOV.writefile("lcov.info", process_folder(".")); run(pipeline(`curl -s https://codecov.io/bash`, `bash`))'
-  - julia -e 'cd(Pkg.dir("Dubins")); include(joinpath("docs", "make.jl"))'
+jobs:
+  include:
+    - stage: "Documentation"
+      julia: 1.0
+      os: linux
+      script:
+        - julia --project=docs/ -e 'using Pkg; Pkg.add("Documenter"); Pkg.instantiate(); Pkg.develop(PackageSpec(path=pwd()))'
+        - julia --project=docs/ docs/make.jl
+      after_success: skip

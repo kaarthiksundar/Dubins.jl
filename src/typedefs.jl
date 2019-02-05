@@ -25,7 +25,7 @@ Its data fields are as follows:
 * the turn-radius, ρ, and,
 * the Dubins path type given by the @enum DubinsPathType
 """
-type DubinsPath
+mutable struct DubinsPath
     qi::Vector{Float64}            # the initial configuration
     params::Vector{Float64}        # the lengths of the three segments
     ρ::Float64                     # turn radius
@@ -44,7 +44,7 @@ origin, the final the coordinate axis is rotated to make the x-axis aligned with
 the line joining the two points. The variable names follow the convention used
 in the paper "Classification of the Dubins set" by Andrei M. Shkel and Vladimir Lumelsky
 """
-type DubinsIntermediateResults
+mutable struct DubinsIntermediateResults
     α::Float64                  # transformed α
     β::Float64                  # transformed β
     d::Float64                  # transformed d
@@ -70,7 +70,7 @@ function DubinsIntermediateResults(q0::Vector{Float64}, q1::Vector{Float64}, ρ:
     Θ = 0
 
     # test required to prevent domain errors if dx=0 and dy=0
-    (d > 0) && (Θ = mod2pi(atan2(dy, dx)))
+    (d > 0) && (Θ = mod2pi(atan(dy, dx)))
     α = mod2pi(q0[3] - Θ)
     β = mod2pi(q1[3] - Θ)
     ir.α = α
