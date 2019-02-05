@@ -223,7 +223,7 @@ function dubins_path_sample_many(path::DubinsPath, step_size::Float64)
 
     q = zeros(3)
     configurations = []
-    x = 0.
+    x = 0.0
     length = dubins_path_length(path)
 
     (step_size < 0 || step_size > length) && (return EDUBPARAM, nothing)

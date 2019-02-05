@@ -1,8 +1,8 @@
 using Dubins
 
-q0 = [0., 0., 0.]
-q1 = [3., 3., 0.]
-ρ = 1.
+q0 = [0.0, 0.0, 0.0]
+q1 = [3.0, 3.0, 0.0]
+ρ = 1.0
 
 errcode, path = dubins_shortest_path(q0, q1, ρ)
 path_length = dubins_path_length(path)

@@ -87,15 +87,15 @@ end
 function dubins_RLR(intermediate_results::DubinsIntermediateResults)
 
     out = Vector{Float64}(undef,3)
-    tmp0 = (6. - intermediate_results.d_sq + 2*intermediate_results.c_ab +
-            2*intermediate_results.d*(intermediate_results.sa - intermediate_results.sb)) / 8.
+    tmp0 = (6.0 - intermediate_results.d_sq + 2*intermediate_results.c_ab +
+            2*intermediate_results.d*(intermediate_results.sa - intermediate_results.sb)) / 8.0
     phi  = atan(intermediate_results.ca - intermediate_results.cb, intermediate_results.d - intermediate_results.sa + intermediate_results.sb)
     tmp0 = round(tmp0; digits=10)
     phi = round(phi; digits=10)
 
     if abs(tmp0) <= 1
         p = mod2pi((2*π) - acos(tmp0))
-        t = mod2pi(intermediate_results.α - phi + mod2pi(p/2.))
+        t = mod2pi(intermediate_results.α - phi + mod2pi(p/2.0))
         p = round(p; digits=10)
         t = round(t; digits=10)
         out[1] = t
@@ -110,15 +110,15 @@ end
 function dubins_LRL(intermediate_results::DubinsIntermediateResults)
 
     out = Vector{Float64}(undef,3)
-    tmp0 = (6. - intermediate_results.d_sq + 2*intermediate_results.c_ab +
-            2*intermediate_results.d*(intermediate_results.sb - intermediate_results.sa)) / 8.
+    tmp0 = (6.0 - intermediate_results.d_sq + 2*intermediate_results.c_ab +
+            2*intermediate_results.d*(intermediate_results.sb - intermediate_results.sa)) / 8.0
     phi = atan(intermediate_results.ca - intermediate_results.cb, intermediate_results.d + intermediate_results.sa - intermediate_results.sb)
     tmp0 = round(tmp0; digits=10)
     phi = round(phi; digits=10)
 
     if abs(tmp0) <= 1
         p = mod2pi(2*π - acos(tmp0))
-        t = mod2pi(-intermediate_results.α - phi + p/2.)
+        t = mod2pi(-intermediate_results.α - phi + p/2.0)
         p = round(p; digits=10)
         t = round(t; digits=10)
         out[1] = t

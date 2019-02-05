@@ -61,7 +61,7 @@ Empty constructor for the DubinsIntermediateResults data type
 """
 function DubinsIntermediateResults(q0::Vector{Float64}, q1::Vector{Float64}, ρ::Float64)
 
-    ir = DubinsIntermediateResults(0., 0., 0., 0., 0., 0., 0., 0., 0.)
+    ir = DubinsIntermediateResults(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.)
 
     dx = q1[1] - q0[1]
     dy = q1[2] - q0[2]

@@ -242,10 +242,10 @@ params = [
 ]
 
 @testset "test for the dubins paths" begin
-    ρ = 1.
+    ρ = 1.0
     for i in 1:length(params)
         param = params[i]
-        errcode, path = dubins_path([0., 0., param.inputs.α], [param.inputs.d, 0., param.inputs.β], ρ, param.inputs.word)
+        errcode, path = dubins_path([0.0, 0.0, param.inputs.α], [param.inputs.d, 0.0, param.inputs.β], ρ, param.inputs.word)
         (errcode != 0) && (errcode = 1)
         @test errcode == param.outputs.errcode
         (errcode == 0) && (@test isapprox(path.params, param.outputs.params, atol=1e-8))
