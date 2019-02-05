@@ -1,6 +1,10 @@
 Dubins.jl Change Log
 ===================
 
+### v1.0.1
+- Bug fix in dubins_segment 
+- Formatting changes
+
 ### v1.0.0
 - Drop support for julia v0.6 
 
