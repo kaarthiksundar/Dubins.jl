@@ -202,7 +202,7 @@ function dubins_path_sample(path::DubinsPath, t::Float64)
 
     # scale the target configuration, translate back to the original starting point
     q[1] = q[1] * path.ρ + path.qi[1]
-    q[1] = q[1] * path.ρ + path.qi[2]
+    q[2] = q[2] * path.ρ + path.qi[2]
     q[3] = mod2pi(q[3]);
 
     return EDUBOK, q
