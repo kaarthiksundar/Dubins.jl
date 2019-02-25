@@ -1,7 +1,7 @@
 using Dubins
 using Memento
 
-using Compat.Test
+using Test
 
 setlevel!(getlogger(Dubins), "error")
 
