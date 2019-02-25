@@ -1,7 +1,7 @@
 Dubins.jl Change Log
 ===================
 
-### staged  
+### v1.0.2 
 - Drop support for julia v0.7 
 - Add travis ci for julia 1.1
 
