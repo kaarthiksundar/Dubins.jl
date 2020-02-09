@@ -2,7 +2,7 @@ using Documenter, Dubins
 
 makedocs(
     modules = [Dubins],
-    format = :html,
+    format = Documenter.HTML(mathengine = Documenter.MathJax()),
     sitename = "Dubins",
     authors = "Kaarthik Sundar",
     pages = [
@@ -13,9 +13,5 @@ makedocs(
 )
 
 deploydocs(
-    deps = nothing,
-    make = nothing,
-    target = "build",
-    repo = "github.com/kaarthiksundar/Dubins.jl.git",
-    julia = "1.1"
+    repo = "github.com/kaarthiksundar/Dubins.jl.git"
 )
