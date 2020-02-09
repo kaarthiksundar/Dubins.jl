@@ -1,6 +1,9 @@
 Dubins.jl Change Log
 ===================
 
+### v1.1.1
+- Update travis ci, documenter, and codecov
+
 ### v1.0.2 
 - Drop support for julia v0.7 
 - Add travis ci for julia 1.1
