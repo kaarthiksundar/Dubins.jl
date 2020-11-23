@@ -2,8 +2,10 @@ using Documenter, Dubins
 
 makedocs(
     modules = [Dubins],
-    prettyurls = get(ENV, "CI", nothing) == "true",
-    format = Documenter.HTML(mathengine = Documenter.MathJax()),
+    format = Documenter.HTML(
+        mathengine = Documenter.MathJax(),
+        prettyurls = get(ENV, "CI", nothing) == "true"
+    ),
     sitename = "Dubins",
     authors = "Kaarthik Sundar",
     pages = [

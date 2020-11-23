@@ -1,6 +1,9 @@
 Dubins.jl Change Log
 ===================
 
+### v1.1.3 
+- Documentation updates
+
 ### v1.1.2
 - Update Memento version 
 - Changed TagBot trigger 
