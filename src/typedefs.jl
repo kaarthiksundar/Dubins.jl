@@ -20,9 +20,9 @@ The data structure that holds the full dubins path.
 
 Its data fields are as follows:
 
-* the initial configuration, qi,
+* the initial configuration, ``q_i``,
 * the params vector that contains the length of each segment, params,
-* the turn-radius, ρ, and,
+* the turn-radius, ``\\rho``, and,
 * the Dubins path type given by the @enum DubinsPathType
 """
 mutable struct DubinsPath
@@ -39,7 +39,7 @@ DubinsPath() = DubinsPath(zeros(3), zeros(3), 1., LSL)
 
 """
 This data structure holds the information to compute the Dubins path
-in the transformed coordinates where the initial (x,y) is translated to the
+in the transformed coordinates where the initial ``(x,y)`` is translated to the
 origin, the final the coordinate axis is rotated to make the x-axis aligned with
 the line joining the two points. The variable names follow the convention used
 in the paper "Classification of the Dubins set" by Andrei M. Shkel and Vladimir Lumelsky

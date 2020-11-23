@@ -10,11 +10,11 @@ export
 """
 Generate a path from an initial configuration to a target configuration with a specified maximum turning radius
 
-A configuration is given by [x, y, θ], where θ is in radians,
+A configuration is given by ``[x, y, \\theta]``, where ``$\\theta`` is in radians,
 
-* q0        - a configuration specified by a 3-element vector [x, y, θ]
-* q1        - a configuration specified by a 3-element vector [x, y, θ]
-* ρ         - turning radius of the vehicle
+* ``q_0``        - a configuration specified by a 3-element vector ``[x, y, \\theta]``
+* ``q_1``        - a configuration specified by a 3-element vector ``[x, y, \\theta]``
+* ``\\rho``      - turning radius of the vehicle
 * return    - tuple (error code, dubins path). If error code != 0, then `nothing` is returned as the second argument
 """
 function dubins_shortest_path(q0::Vector{Float64}, q1::Vector{Float64}, ρ::Float64)
@@ -60,9 +60,9 @@ end
 """
 Generate a path with a specified word from an initial configuratioon to a target configuration, with a specified turning radius
 
-* q0        - a configuration specified by a 3-element vector x, y, theta
-* q1        - a configuration specified by a 3-element vector x, y, theta
-* ρ         - turning radius of the vehicle
+* ``q_0``       - a configuration specified by a 3-element vector ``x``, ``y``, ``\\theta``
+* ``q_1``       - a configuration specified by a 3-element vector ``x``, ``y``, ``\\theta``
+* ``\\rho``     - turning radius of the vehicle
 * path_type - the specified path type to use
 * return    - tuple (error code, dubins path). If error code != 0, then `nothing` is returned as the second argument
 """
@@ -108,7 +108,7 @@ dubins_path_length(path::DubinsPath) = sum(path.params)*path.ρ
 Calculate the length of a specific segment of  an initialized path
 
 * path      - path to find the length of
-* i         - the segment for which the length is required (1-3)
+* ``i``     - the segment for which the length is required (1-3)
 * return    - segment length
 """
 dubins_segment_length(path::DubinsPath, i::Int) = (i<1 || i>3) ? (return Inf) : (return path.params[i]*path.ρ)
@@ -117,7 +117,7 @@ dubins_segment_length(path::DubinsPath, i::Int) = (i<1 || i>3) ? (return Inf) : 
 Calculate the normalized length of a specific segment of  an initialized path
 
 * path      - path to find the length of
-* i         - the segment for which the length is required (1-3)
+* ``i``     - the segment for which the length is required (1-3)
 * return    - normalized segment length
 """
 dubins_segment_length_normalized(path::DubinsPath, i::Int) = (i<1 || i>3) ? (return Inf) : (return path.params[i])
@@ -131,13 +131,13 @@ Extract the integer that represents which path type was used
 dubins_path_type(path::DubinsPath) = path.path_type
 
 """
-Operators that transform an arbitrary point qi, [x, y, θ], into an image point given a parameter t and segment type
+Operators that transform an arbitrary point ``q_i``, ``[x, y, \\theta]``, into an image point given a parameter ``t`` and segment type
 
-The three operators correspond to L_SEG, R_SEG, and S_SEG
+The three operators correspond to ``L``, ``R``, and ``S``
 
- * L_SEG(x, y, θ, t) = [x, y, θ] + [ sin(θ + t) - sin(θ), -cos(θ + t) + cos(θ),  t]
- * R_SEG(x, y, θ, t) = [x, y, θ] + [-sin(θ - t) + sin(θ),  cos(θ - t) - cos(θ), -t]
- * S_SEG(x, y, θ, t) = [x, y, θ] + [ cos(θ) * t,           sin(θ) * t,           0]
+ * ``L(x, y, \\theta, t) = [x, y, \\theta] + [ \\sin(\\theta + t) - \\sin(\\theta), -\\cos(\\theta + t) + \\cos(\\theta),  t]``
+ * ``R(x, y, \\theta, t) = [x, y, \\theta] + [-\\sin(\\theta - t) + \\sin(\\theta),  \\cos(\\theta - t) - \\cos(\\theta), -t]``
+ * ``S(x, y, \\theta, t) = [x, y, \\theta] + [ \\cos(\\theta) * t, \\sin(\\theta) * t, 0]``
 
  * return    -  the image point as a 3-element vector
 """
@@ -171,8 +171,8 @@ end
 Calculate the configuration along the path, using the parameter t
 
  * path      - an initialized path
- * t         - length measure where 0 <= t < dubins_path_length(path)
- * return    - tuple containing non-zero error code if 't' is not in the correct range and the configuration result [x, y, θ]
+ * ``t``         - length measure where ``0 \\leq t <`` dubins_path_length(path)
+ * return    - tuple containing non-zero error code if 't' is not in the correct range and the configuration result ``[x, y, \\theta]``
 """
 function dubins_path_sample(path::DubinsPath, t::Float64)
 
@@ -243,7 +243,7 @@ end
 Convenience function to identify the endpoint of a path
 
  * path          - an initialized path
- * return        - tuple containing (zero on successful completion and the end configuration [x,y,Θ])
+ * return        - tuple containing (zero on successful completion and the end configuration ``[x,y,\\theta]``)
 """
 dubins_path_endpoint(path::DubinsPath) = dubins_path_sample(path, dubins_path_length(path) - TOL)
 
@@ -251,7 +251,7 @@ dubins_path_endpoint(path::DubinsPath) = dubins_path_sample(path, dubins_path_le
 Convenience function to extract a sub-path
 
  * path          - an initialized path
- * t             - a length measure, where 0 < t < dubins_path_length(path)
+ * ``t``             - a length measure, where ``0 < t <`` dubins_path_length(path)
  * return        - zero on successful completion and the subpath
 """
 function dubins_extract_subpath(path::DubinsPath, t::Float64)
