@@ -2,7 +2,8 @@
 
 [![Build Status](https://github.com/kaarthiksundar/Dubins.jl/workflows/CI/badge.svg?branch=master)](https://github.com/kaarthiksundar/Dubins.jl/actions?query=workflow%3ACI)
 [![codecov](https://codecov.io/gh/kaarthiksundar/Dubins.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/kaarthiksundar/Dubins.jl)
-[![](https://img.shields.io/badge/docs-latest-blue.svg)](https://kaarthiksundar.github.io/Dubins.jl/dev/)
+[![](https://img.shields.io/badge/docs-dev-blue.svg)](https://kaarthiksundar.github.io/Dubins.jl/dev/)
+[![](https://img.shields.io/badge/docs-stable-blue.svg)](https://kaarthiksundar.github.io/Dubins.jl/stable/)
 
 Dubins.jl is a Julia package for computing the shortest path between two configurations for the Dubins' vehicle (see [Dubins, 1957](http://www.jstor.org/stable/2372560?seq=1#page_scan_tab_contents)). The shortest path algorithm, implemented in this package, uses the algebraic solution approach in the paper "[Classification of the Dubins set](https://www.sciencedirect.com/science/article/pii/S0921889000001275)" by Andrei M. Shkel and Vladimir Lumelsky.
 
