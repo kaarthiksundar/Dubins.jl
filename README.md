@@ -1,8 +1,6 @@
 # Dubins.jl
 
-Release: [![](https://img.shields.io/badge/docs-stable-blue.svg)](https://kaarthiksundar.github.io/Dubins.jl/stable/)
-
-Dev: [![Build Status](https://github.com/kaarthiksundar/Dubins.jl/workflows/CI/badge.svg?branch=master)](https://github.com/kaarthiksundar/Dubins.jl/actions?query=workflow%3ACI)
+[![Build Status](https://github.com/kaarthiksundar/Dubins.jl/workflows/CI/badge.svg?branch=master)](https://github.com/kaarthiksundar/Dubins.jl/actions?query=workflow%3ACI)
 [![codecov](https://codecov.io/gh/kaarthiksundar/Dubins.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/kaarthiksundar/Dubins.jl)
 [![](https://img.shields.io/badge/docs-latest-blue.svg)](https://kaarthiksundar.github.io/Dubins.jl/latest/)
 
