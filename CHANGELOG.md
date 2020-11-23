@@ -1,6 +1,11 @@
 Dubins.jl Change Log
 ===================
 
+### v1.1.2
+- Update Memento version 
+- Changed TagBot trigger 
+- Move CI to github actions
+
 ### v1.1.1
 - Update travis ci, documenter, and codecov
 
