@@ -137,7 +137,7 @@ The three operators correspond to ``L``, ``R``, and ``S``
 
  * ``L(x, y, \\theta, t) = [x, y, \\theta] + [ \\sin(\\theta + t) - \\sin(\\theta), -\\cos(\\theta + t) + \\cos(\\theta),  t]``
  * ``R(x, y, \\theta, t) = [x, y, \\theta] + [-\\sin(\\theta - t) + \\sin(\\theta),  \\cos(\\theta - t) - \\cos(\\theta), -t]``
- * ``S(x, y, \\theta, t) = [x, y, \\theta] + [ \\cos(\\theta) * t, \\sin(\\theta) * t, 0]``
+ * ``S(x, y, \\theta, t) = [x, y, \\theta] + [ \\cos(\\theta) \\cdot t, \\sin(\\theta) \\cdot t, 0]``
 
  * return    -  the image point as a 3-element vector
 """
@@ -171,7 +171,7 @@ end
 Calculate the configuration along the path, using the parameter t
 
  * path      - an initialized path
- * ``t``         - length measure where ``0 \\leq t <`` dubins_path_length(path)
+ * ``t``         - length measure where ``0 \\leq t <`` [`dubins_path_length`](@ref)(path)
  * return    - tuple containing non-zero error code if 't' is not in the correct range and the configuration result ``[x, y, \\theta]``
 """
 function dubins_path_sample(path::DubinsPath, t::Float64)
@@ -251,7 +251,7 @@ dubins_path_endpoint(path::DubinsPath) = dubins_path_sample(path, dubins_path_le
 Convenience function to extract a sub-path
 
  * path          - an initialized path
- * ``t``             - a length measure, where ``0 < t <`` dubins_path_length(path)
+ * ``t``             - a length measure, where ``0 < t <`` [`dubins_path_length`](@ref)(path)
  * return        - zero on successful completion and the subpath
 """
 function dubins_extract_subpath(path::DubinsPath, t::Float64)
