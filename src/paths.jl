@@ -1,8 +1,7 @@
 
 
-function dubins_LSL(intermediate_results::DubinsIntermediateResults)
+function dubins_LSL(intermediate_results::DubinsIntermediateResults{F}) where {F}
 
-    out = Vector{Float64}(undef,3)
     tmp0 = intermediate_results.d + intermediate_results.sa - intermediate_results.sb
     p_sq = 2 + intermediate_results.d_sq - (2*intermediate_results.c_ab) +
             (2 * intermediate_results.d * (intermediate_results.sa - intermediate_results.sb))
@@ -12,18 +11,18 @@ function dubins_LSL(intermediate_results::DubinsIntermediateResults)
     if p_sq >= 0
         tmp1 = atan((intermediate_results.cb - intermediate_results.ca), tmp0)
         tmp1 = round(tmp1; digits=10)
-        out[1] = mod2pi(tmp1 - intermediate_results.α)
-        out[2] = sqrt(p_sq)
-        out[3] = mod2pi(intermediate_results.β - tmp1)
+        out1 = mod2pi(tmp1 - intermediate_results.α)
+        out2 = sqrt(p_sq)
+        out3 = mod2pi(intermediate_results.β - tmp1)
+        out = SVector{3, F}(out1, out2, out3)
         return EDUBOK, out
     end
 
-    return EDUBNOPATH, nothing
+    return EDUBNOPATH, SVector{3, F}(0,0,0)
 end
 
-function dubins_RSR(intermediate_results::DubinsIntermediateResults)
+function dubins_RSR(intermediate_results::DubinsIntermediateResults{F}) where {F}
 
-    out = Vector{Float64}(undef, 3)
     tmp0 = intermediate_results.d - intermediate_results.sa + intermediate_results.sb
     p_sq = 2 + intermediate_results.d_sq - (2 * intermediate_results.c_ab) +
             (2 * intermediate_results.d * (intermediate_results.sb - intermediate_results.sa))
@@ -33,18 +32,18 @@ function dubins_RSR(intermediate_results::DubinsIntermediateResults)
     if p_sq >= 0
         tmp1 = atan((intermediate_results.ca - intermediate_results.cb), tmp0)
         tmp1 = round(tmp1; digits=10)
-        out[1] = mod2pi(intermediate_results.α - tmp1)
-        out[2] = sqrt(p_sq)
-        out[3] = mod2pi(tmp1 -intermediate_results.β)
+        out1 = mod2pi(intermediate_results.α - tmp1)
+        out2 = sqrt(p_sq)
+        out3 = mod2pi(tmp1 -intermediate_results.β)
+        out = SVector{3, F}(out1, out2, out3)
         return EDUBOK, out
     end
 
-    return EDUBNOPATH, nothing
+    return EDUBNOPATH, SVector{3, F}(0,0,0)
 end
 
-function dubins_LSR(intermediate_results::DubinsIntermediateResults)
+function dubins_LSR(intermediate_results::DubinsIntermediateResults{F}) where {F}
 
-    out = Vector{Float64}(undef,3)
     p_sq = -2 + (intermediate_results.d_sq) + (2 * intermediate_results.c_ab) +
                     (2 * intermediate_results.d * (intermediate_results.sa + intermediate_results.sb))
     p_sq = round(p_sq; digits=10)
@@ -54,18 +53,19 @@ function dubins_LSR(intermediate_results::DubinsIntermediateResults)
         tmp0 = atan((-intermediate_results.ca - intermediate_results.cb),
                     (intermediate_results.d + intermediate_results.sa + intermediate_results.sb)) - atan(-2.0, p)
         tmp0 = round(tmp0; digits=10)
-        out[1] = mod2pi(tmp0 - intermediate_results.α)
-        out[2] = p
-        out[3] = mod2pi(tmp0 - mod2pi(intermediate_results.β))
+        out1 = mod2pi(tmp0 - intermediate_results.α)
+        out2 = p
+        out3 = mod2pi(tmp0 - mod2pi(intermediate_results.β))
+        out = SVector{3, F}(out1, out2, out3)
         return EDUBOK, out
     end
 
-    return EDUBNOPATH, nothing
+    return EDUBNOPATH, SVector{3, F}(0,0,0)
 end
 
-function dubins_RSL(intermediate_results::DubinsIntermediateResults)
+function dubins_RSL(intermediate_results::DubinsIntermediateResults{F}) where {F}
 
-    out = Vector{Float64}(undef,3)
+
     p_sq = -2 + intermediate_results.d_sq + (2 * intermediate_results.c_ab) -
             (2 * intermediate_results.d * (intermediate_results.sa + intermediate_results.sb))
     p_sq = round(p_sq; digits=10)
@@ -75,18 +75,18 @@ function dubins_RSL(intermediate_results::DubinsIntermediateResults)
         tmp0 = atan((intermediate_results.ca + intermediate_results.cb),
                         (intermediate_results.d - intermediate_results.sa - intermediate_results.sb)) - atan(2.0, p)
         tmp0 = round(tmp0; digits=10)
-        out[1] = mod2pi(intermediate_results.α - tmp0)
-        out[2] = p
-        out[3] = mod2pi(intermediate_results.β - tmp0)
+        out1 = mod2pi(intermediate_results.α - tmp0)
+        out2 = p
+        out3 = mod2pi(intermediate_results.β - tmp0)
+        out = SVector{3, F}(out1, out2, out3)
         return EDUBOK, out
     end
 
-    return EDUBNOPATH, nothing
+    return EDUBNOPATH, SVector{3, F}(0,0,0)
 end
 
-function dubins_RLR(intermediate_results::DubinsIntermediateResults)
+function dubins_RLR(intermediate_results::DubinsIntermediateResults{F})  where {F}
 
-    out = Vector{Float64}(undef,3)
     tmp0 = (6.0 - intermediate_results.d_sq + 2*intermediate_results.c_ab +
             2*intermediate_results.d*(intermediate_results.sa - intermediate_results.sb)) / 8.0
     phi  = atan(intermediate_results.ca - intermediate_results.cb, intermediate_results.d - intermediate_results.sa + intermediate_results.sb)
@@ -98,18 +98,18 @@ function dubins_RLR(intermediate_results::DubinsIntermediateResults)
         t = mod2pi(intermediate_results.α - phi + mod2pi(p/2.0))
         p = round(p; digits=10)
         t = round(t; digits=10)
-        out[1] = t
-        out[2] = p
-        out[3] = mod2pi(intermediate_results.α - intermediate_results.β - t + mod2pi(p))
+        out1 = t
+        out2 = p
+        out3 = mod2pi(intermediate_results.α - intermediate_results.β - t + mod2pi(p))
+        out = SVector{3, F}(out1, out2, out3)
         return EDUBOK, out
     end
 
-    return EDUBNOPATH, nothing
+    return EDUBNOPATH, SVector{3, F}(0,0,0)
 end
 
-function dubins_LRL(intermediate_results::DubinsIntermediateResults)
+function dubins_LRL(intermediate_results::DubinsIntermediateResults{F}) where {F}
 
-    out = Vector{Float64}(undef,3)
     tmp0 = (6.0 - intermediate_results.d_sq + 2*intermediate_results.c_ab +
             2*intermediate_results.d*(intermediate_results.sb - intermediate_results.sa)) / 8.0
     phi = atan(intermediate_results.ca - intermediate_results.cb, intermediate_results.d + intermediate_results.sa - intermediate_results.sb)
@@ -121,11 +121,12 @@ function dubins_LRL(intermediate_results::DubinsIntermediateResults)
         t = mod2pi(-intermediate_results.α - phi + p/2.0)
         p = round(p; digits=10)
         t = round(t; digits=10)
-        out[1] = t
-        out[2] = p
-        out[3] = mod2pi(mod2pi(intermediate_results.β) - intermediate_results.α - t + mod2pi(p))
+        out1 = t
+        out2 = p
+        out3 = mod2pi(mod2pi(intermediate_results.β) - intermediate_results.α - t + mod2pi(p))
+        out = SVector{3, F}(out1, out2, out3)
         return EDUBOK, out
     end
 
-    return EDUBNOPATH, nothing
+    return EDUBNOPATH, SVector{3, F}(0,0,0)
 end

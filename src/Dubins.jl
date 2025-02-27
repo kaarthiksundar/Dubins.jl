@@ -1,5 +1,6 @@
 module Dubins
 
+using StaticArrays
 using Memento
 
 const LOGGER = getlogger(@__MODULE__)

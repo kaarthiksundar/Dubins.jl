@@ -6,14 +6,21 @@ export
 @enum DubinsPathType LSL LSR RSL RSR RLR LRL
 @enum SegmentType L_SEG S_SEG R_SEG
 
-DIRDATA = Dict{Int,Vector{SegmentType}}(
-                                        Int(LSL) => [L_SEG, S_SEG, L_SEG],
-                                        Int(LSR) => [L_SEG, S_SEG, R_SEG],
-                                        Int(RSL) => [R_SEG, S_SEG, L_SEG],
-                                        Int(RSR) => [R_SEG, S_SEG, R_SEG],
-                                        Int(RLR) => [R_SEG, L_SEG, R_SEG],
-                                        Int(LRL) => [L_SEG, R_SEG, L_SEG]
-                                       )
+# DIRDATA = Dict{Int,SVector{3, SegmentType}}(
+#                                         Int(LSL) => (@SVector [L_SEG, S_SEG, L_SEG]),
+#                                         Int(LSR) => (@SVector [L_SEG, S_SEG, R_SEG]),
+#                                         Int(RSL) => (@SVector [R_SEG, S_SEG, L_SEG]),
+#                                         Int(RSR) => (@SVector [R_SEG, S_SEG, R_SEG]),
+#                                         Int(RLR) => (@SVector [R_SEG, L_SEG, R_SEG]),
+#                                         Int(LRL) => (@SVector [L_SEG, R_SEG, L_SEG])
+const DIRDATA = Dict{DubinsPathType,SVector{3, SegmentType}}(
+                                        LSL => (@SVector [L_SEG, S_SEG, L_SEG]),
+                                        LSR => (@SVector [L_SEG, S_SEG, R_SEG]),
+                                        RSL => (@SVector [R_SEG, S_SEG, L_SEG]),
+                                        RSR => (@SVector [R_SEG, S_SEG, R_SEG]),
+                                        RLR => (@SVector [R_SEG, L_SEG, R_SEG]),
+                                        LRL => (@SVector [L_SEG, R_SEG, L_SEG])
+                                       )                       
 
 """
 The data structure that holds the full dubins path.
@@ -25,17 +32,24 @@ Its data fields are as follows:
 * the turn-radius, ``\\rho``, and,
 * the Dubins path type given by the @enum DubinsPathType
 """
-mutable struct DubinsPath
-    qi::Vector{Float64}            # the initial configuration
-    params::Vector{Float64}        # the lengths of the three segments
-    ρ::Float64                     # turn radius
+struct DubinsPath{F}
+    qi::SVector{3, F}            # the initial configuration
+    params::SVector{3, F}        # the lengths of the three segments
+    ρ::F                     # turn radius
     path_type::DubinsPathType   # the path type
+end
+
+function DubinsPath(qi::VF1, params::VF2, ρ::F, path_type) where {F, VF1 <: AbstractVector{F}, VF2 <: AbstractVector{F}}
+    @assert length(qi) == 3
+    @assert length(params) == 3
+    
+    return DubinsPath(SVector{3, F}(qi), SVector{3, F}(params), ρ, path_type)
 end
 
 """
 Empty constructor for the DubinsPath type
 """
-DubinsPath() = DubinsPath(zeros(3), zeros(3), 1., LSL)
+DubinsPath{F}() where {F} = DubinsPath(SVector{3, F}(0,0,0), SVector{3, F}(0,0,0), zero(F), LSL)
 
 """
 This data structure holds the information to compute the Dubins path
@@ -44,24 +58,26 @@ origin, the final the coordinate axis is rotated to make the x-axis aligned with
 the line joining the two points. The variable names follow the convention used
 in the paper "Classification of the Dubins set" by Andrei M. Shkel and Vladimir Lumelsky
 """
-mutable struct DubinsIntermediateResults
-    α::Float64                  # transformed α
-    β::Float64                  # transformed β
-    d::Float64                  # transformed d
-    sa::Float64                 # sin(α)
-    sb::Float64                 # sin(β)
-    ca::Float64                 # cos(α)
-    cb::Float64                 # cos(β)
-    c_ab::Float64               # cos(α-β)
-    d_sq::Float64               # d²
+struct DubinsIntermediateResults{F}
+    α::F                  # transformed α
+    β::F                  # transformed β
+    d::F                  # transformed d
+    sa::F                 # sin(α)
+    sb::F                 # sin(β)
+    ca::F                 # cos(α)
+    cb::F                 # cos(β)
+    c_ab::F               # cos(α-β)
+    d_sq::F               # d²
 end
 
 """
 Empty constructor for the DubinsIntermediateResults data type
 """
-function DubinsIntermediateResults(q0::Vector{Float64}, q1::Vector{Float64}, ρ::Float64)
+function DubinsIntermediateResults(q0::VF, q1::VF, ρ::F) where {F, VF<:AbstractVector{F}}
+    
+    # TODO: input size checking
 
-    ir = DubinsIntermediateResults(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.)
+    # ir = DubinsIntermediateResults(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.)
 
     dx = q1[1] - q0[1]
     dy = q1[2] - q0[2]
@@ -73,15 +89,15 @@ function DubinsIntermediateResults(q0::Vector{Float64}, q1::Vector{Float64}, ρ:
     (d > 0) && (Θ = mod2pi(atan(dy, dx)))
     α = mod2pi(q0[3] - Θ)
     β = mod2pi(q1[3] - Θ)
-    ir.α = α
-    ir.β = β
-    ir.d = d
-    ir.sa = sin(α)
-    ir.sb = sin(β)
-    ir.ca = cos(α)
-    ir.cb = cos(β)
-    ir.c_ab = cos(α-β)
-    ir.d_sq = d*d
+    d = d
+    sa = sin(α)
+    sb = sin(β)
+    ca = cos(α)
+    cb = cos(β)
+    c_ab = cos(α-β)
+    d_sq = d*d
+
+    ir = DubinsIntermediateResults(α, β,d,sa,sb,ca,cb,c_ab,d_sq)
 
     return ir
 end
