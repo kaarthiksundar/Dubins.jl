@@ -230,7 +230,7 @@ Convenience function to identify the endpoint of a path
  * path          - an initialized path
  * return        - tuple containing (zero on successful completion and the end configuration ``[x,y,\\theta]``)
 """
-dubins_path_endpoint(path::DubinsPath{F}) where {F} = dubins_path_sample(path, dubins_path_length(path) - F(TOL))
+dubins_path_endpoint(path::DubinsPath{F}, tol=1e-9) where {F} = dubins_path_sample(path, dubins_path_length(path) - tol)
 
 """
 Convenience function to extract a sub-path
@@ -291,10 +291,10 @@ function dubins_word(intermediate_results::DubinsIntermediateResults{F}, path_ty
     return result, out
 end
 
-"""
-Reset tolerance value
-"""
-function set_tolerance(ϵ::Float64)
-    TOL = ϵ
-    return
-end
+# """
+# Reset tolerance value
+# """
+# function set_tolerance(ϵ::Float64)
+#     TOL = ϵ
+#     return
+# end

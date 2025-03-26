@@ -89,7 +89,7 @@ end
         errcode, qsamp = dubins_path_endpoint(path)
     end
     @test isapprox(qsamp, [4.0, 0.0, 0.0], atol=1e-8)
-    @test m == 0 broken=true
+    @test m == 0
 end
 
 @testset "test allocations extract sub-path static" begin
@@ -108,5 +108,5 @@ end
     errcode, qsamp = dubins_path_endpoint(subpath)
     end
     @test isapprox(qsamp, [3.0, 0.0, 0.0], atol=1e-8)
-    @test m2 == 0 broken=true #TODO: need to fix
+    @test m2 == 0 
 end

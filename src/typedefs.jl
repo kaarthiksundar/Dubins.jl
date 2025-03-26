@@ -108,4 +108,4 @@ const EDUBPARAM = 2             # path parameterization error
 const EDUBBADRHO = 3            # the rho value is invalid
 const EDUBNOPATH = 4            # no connection between configurations with this word
 const EDUBBADINPUT = 5          # uninitialized inputs to functions
-TOL = 1e-10                     # tolerance
+# TOL = 1e-10                     # tolerance
