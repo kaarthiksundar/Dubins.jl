@@ -1,7 +1,18 @@
-export
-    DubinsPathType, SegmentType, DubinsPath,
-    LSL, LSR, RSL, RSR, RLR, LRL,
-    EDUBOK, EDUBCOCONFIGS, EDUBPARAM, EDUBBADRHO, EDUBNOPATH, EDUBBADINPUT
+export DubinsPathType,
+    SegmentType,
+    DubinsPath,
+    LSL,
+    LSR,
+    RSL,
+    RSR,
+    RLR,
+    LRL,
+    EDUBOK,
+    EDUBCOCONFIGS,
+    EDUBPARAM,
+    EDUBBADRHO,
+    EDUBNOPATH,
+    EDUBBADINPUT
 
 @enum DubinsPathType LSL LSR RSL RSR RLR LRL
 @enum SegmentType L_SEG S_SEG R_SEG
@@ -13,14 +24,14 @@ export
 #                                         Int(RSR) => (@SVector [R_SEG, S_SEG, R_SEG]),
 #                                         Int(RLR) => (@SVector [R_SEG, L_SEG, R_SEG]),
 #                                         Int(LRL) => (@SVector [L_SEG, R_SEG, L_SEG])
-const DIRDATA = Dict{DubinsPathType,SVector{3, SegmentType}}(
-                                        LSL => (@SVector [L_SEG, S_SEG, L_SEG]),
-                                        LSR => (@SVector [L_SEG, S_SEG, R_SEG]),
-                                        RSL => (@SVector [R_SEG, S_SEG, L_SEG]),
-                                        RSR => (@SVector [R_SEG, S_SEG, R_SEG]),
-                                        RLR => (@SVector [R_SEG, L_SEG, R_SEG]),
-                                        LRL => (@SVector [L_SEG, R_SEG, L_SEG])
-                                       )                       
+const DIRDATA = Dict{DubinsPathType,SVector{3,SegmentType}}(
+    LSL => (@SVector [L_SEG, S_SEG, L_SEG]),
+    LSR => (@SVector [L_SEG, S_SEG, R_SEG]),
+    RSL => (@SVector [R_SEG, S_SEG, L_SEG]),
+    RSR => (@SVector [R_SEG, S_SEG, R_SEG]),
+    RLR => (@SVector [R_SEG, L_SEG, R_SEG]),
+    LRL => (@SVector [L_SEG, R_SEG, L_SEG]),
+)
 
 """
 The data structure that holds the full dubins path.
@@ -33,23 +44,29 @@ Its data fields are as follows:
 * the Dubins path type given by the @enum DubinsPathType
 """
 struct DubinsPath{F}
-    qi::SVector{3, F}            # the initial configuration
-    params::SVector{3, F}        # the lengths of the three segments
+    qi::SVector{3,F}            # the initial configuration
+    params::SVector{3,F}        # the lengths of the three segments
     ρ::F                     # turn radius
     path_type::DubinsPathType   # the path type
 end
 
-function DubinsPath(qi::VF1, params::VF2, ρ::F, path_type) where {F, VF1 <: AbstractVector{F}, VF2 <: AbstractVector{F}}
+function DubinsPath(
+    qi::VF1,
+    params::VF2,
+    ρ::F,
+    path_type,
+) where {F,VF1<:AbstractVector{F},VF2<:AbstractVector{F}}
     @assert length(qi) == 3
     @assert length(params) == 3
-    
-    return DubinsPath(SVector{3, F}(qi), SVector{3, F}(params), ρ, path_type)
+
+    return DubinsPath(SVector{3,F}(qi), SVector{3,F}(params), ρ, path_type)
 end
 
 """
 Empty constructor for the DubinsPath type
 """
-DubinsPath{F}() where {F} = DubinsPath(SVector{3, F}(0,0,0), SVector{3, F}(0,0,0), zero(F), LSL)
+DubinsPath{F}() where {F} =
+    DubinsPath(SVector{3,F}(0, 0, 0), SVector{3,F}(0, 0, 0), zero(F), LSL)
 
 """
 This data structure holds the information to compute the Dubins path
@@ -73,15 +90,15 @@ end
 """
 Empty constructor for the DubinsIntermediateResults data type
 """
-function DubinsIntermediateResults(q0::VF, q1::VF, ρ::F) where {F, VF<:AbstractVector{F}}
-    
+function DubinsIntermediateResults(q0::VF, q1::VF, ρ::F) where {F,VF<:AbstractVector{F}}
+
     # TODO: input size checking
 
     # ir = DubinsIntermediateResults(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.)
 
     dx = q1[1] - q0[1]
     dy = q1[2] - q0[2]
-    D = sqrt(dx*dx + dy*dy)
+    D = sqrt(dx * dx + dy * dy)
     d = D / ρ
     Θ = 0
 
@@ -94,10 +111,10 @@ function DubinsIntermediateResults(q0::VF, q1::VF, ρ::F) where {F, VF<:Abstract
     sb = sin(β)
     ca = cos(α)
     cb = cos(β)
-    c_ab = cos(α-β)
-    d_sq = d*d
+    c_ab = cos(α - β)
+    d_sq = d * d
 
-    ir = DubinsIntermediateResults(α, β,d,sa,sb,ca,cb,c_ab,d_sq)
+    ir = DubinsIntermediateResults(α, β, d, sa, sb, ca, cb, c_ab, d_sq)
 
     return ir
 end

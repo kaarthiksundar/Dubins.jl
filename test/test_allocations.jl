@@ -34,11 +34,11 @@ end
 end
 
 @testset "test allocations simple path static" begin
-    q0 = @SVector [0,0,0.0]
-    q1 = @SVector [1.0, 0,0]
+    q0 = @SVector [0, 0, 0.0]
+    q1 = @SVector [1.0, 0, 0]
 
-    m = @allocated  begin
-    errcode, path = dubins_path(q0, q1, 1.0, LSL)
+    m = @allocated begin
+        errcode, path = dubins_path(q0, q1, 1.0, LSL)
     end
     @test errcode == EDUBOK
     @test m == 0
@@ -60,7 +60,7 @@ end
 end
 
 @testset "test allocations sample static" begin
-    errcode, path = dubins_path(zeros(3), [4.0, 0.0, 0.], 1.0, LSL)
+    errcode, path = dubins_path(zeros(3), [4.0, 0.0, 0.0], 1.0, LSL)
     @test errcode == EDUBOK
 
     # precompile
@@ -80,15 +80,15 @@ end
 end
 
 @testset "test allocations end point static" begin
-    q0 = SVector{3, Float64}(0,0,0)
-    q1 = SVector{3, Float64}(4,0,0)
+    q0 = SVector{3,Float64}(0, 0, 0)
+    q1 = SVector{3,Float64}(4, 0, 0)
     errcode, path = dubins_path(q0, q1, 1.0, LSL)
     @test errcode == EDUBOK
 
-    m = @allocated begin 
+    m = @allocated begin
         errcode, qsamp = dubins_path_endpoint(path)
     end
-    @test isapprox(qsamp, [4.0, 0.0, 0.0], atol=1e-8)
+    @test isapprox(qsamp, [4.0, 0.0, 0.0], atol = 1e-8)
     @test m == 0
 end
 
@@ -97,7 +97,7 @@ end
     @test errcode == EDUBOK
 
     m1 = @allocated begin
-    errcode, subpath = dubins_extract_subpath(path, 3.0)
+        errcode, subpath = dubins_extract_subpath(path, 3.0)
     end
     @test errcode == EDUBOK
     @test m1 == 0
@@ -105,8 +105,8 @@ end
     # precompile
     dubins_path_endpoint(subpath)
     m2 = @allocated begin
-    errcode, qsamp = dubins_path_endpoint(subpath)
+        errcode, qsamp = dubins_path_endpoint(subpath)
     end
-    @test isapprox(qsamp, [3.0, 0.0, 0.0], atol=1e-8)
-    @test m2 == 0 
+    @test isapprox(qsamp, [3.0, 0.0, 0.0], atol = 1e-8)
+    @test m2 == 0
 end
