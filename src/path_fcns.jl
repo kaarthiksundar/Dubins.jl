@@ -174,9 +174,10 @@ Calculate the configuration along the path, using the parameter t
  * ``t``         - length measure where ``0 \\leq t <`` [`dubins_path_length`](@ref)(path)
  * return    - tuple containing non-zero error code if 't' is not in the correct range and the configuration result ``[x, y, \\theta]``
 """
-function dubins_path_sample(path::DubinsPath{F}, t::F) where {F}
+function dubins_path_sample(path::DubinsPath{F}, t::F; extrapolate = true) where {F}
 
-    (t < 0 || t > dubins_path_length(path)) && (return EDUBPARAM, path.qi)
+    # (t < 0 || t > dubins_path_length(path)) && (return EDUBPARAM, path.qi)
+    (t < 0) && (return EDUBPARAM, path.qi)
 
     # tprime is the normalized variant of the parameter t
     tprime = t / path.ρ
@@ -188,14 +189,24 @@ function dubins_path_sample(path::DubinsPath{F}, t::F) where {F}
     # generate target configuration
     p1 = path.params[1]
     p2 = path.params[2]
+    p3 = path.params[3]
     q1 = dubins_segment(p1, qi, segment_types[1])
     q2 = dubins_segment(p2, q1, segment_types[2])
+    q3 = dubins_segment(p3, q2, segment_types[3])
     if tprime < p1
         q = dubins_segment(tprime, qi, segment_types[1])
     elseif tprime < (p1 + p2)
         q = dubins_segment(tprime - p1, q1, segment_types[2])
-    else
+    elseif tprime <= (p1 + p2 + p3)
         q = dubins_segment(tprime - p1 - p2, q2, segment_types[3])
+    else
+        if extrapolate
+            # extrapolate using straight segment
+            q = dubins_segment(tprime - p1 - p2 - p3, q3, S_SEG)
+        else
+            # not allowed to extrapolate
+            return EDUBPARAM, path.qi
+        end
     end
 
     # scale the target configuration, translate back to the original starting point
@@ -244,8 +255,8 @@ Convenience function to identify the endpoint of a path
  * path          - an initialized path
  * return        - tuple containing (zero on successful completion and the end configuration ``[x,y,\\theta]``)
 """
-dubins_path_endpoint(path::DubinsPath{F}, tol = 1e-9) where {F} =
-    dubins_path_sample(path, dubins_path_length(path) - tol)
+dubins_path_endpoint(path::DubinsPath{F}) where {F} =
+    dubins_path_sample(path, dubins_path_length(path))
 
 """
 Convenience function to extract a sub-path
@@ -298,7 +309,7 @@ function dubins_word(
     elseif path_type == RLR
         result, out = dubins_RLR(intermediate_results)
     else
-        result, out = EDUBNOPATH, SVector{3,F}(0, 0, 0.0)
+        result, out = EDUBNOPATH, SVector{3,F}(0, 0, 0)
     end
 
     return result, out

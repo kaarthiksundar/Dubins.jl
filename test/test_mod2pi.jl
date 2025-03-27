@@ -7,7 +7,7 @@
 
     @test errcode == EDUBOK
 
-    @show path
+    # @show path
 
     @test abs(path.params[3]) < 0.1
 end

@@ -59,9 +59,12 @@ end
     @test errcode == EDUBPARAM
     # @test qsamp == nothing
 
-    errcode, qsamp = dubins_path_sample(path, 5.0)
+    errcode, qsamp = dubins_path_sample(path, 5.0; extrapolate = false)
     @test errcode == EDUBPARAM
     # @test qsamp == nothing
+
+    errcode, qsamp = dubins_path_sample(path, 5.0; extrapolate = true)
+    @test errcode == EDUBOK
 end
 
 @testset "test sample many LSL" begin
