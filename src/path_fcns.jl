@@ -20,7 +20,7 @@ A configuration is given by ``[x, y, \\theta]``, where ``\\theta`` is in radians
 * ``\\rho``      - turning radius of the vehicle
 * return    - tuple (error code, dubins path). If error code != 0, then `nothing` is returned as the second argument
 """
-function dubins_shortest_path(q0::VF, q1::VF, ρ::F) where {F,VF<:AbstractVector{F}}
+function dubins_shortest_path(q0::VF, q1::VF, ρ::F, loop_tol::F = 1e-5) where {F,VF<:AbstractVector{F}}
 
     # input checking
     @assert length(q0) == 3
@@ -36,7 +36,7 @@ function dubins_shortest_path(q0::VF, q1::VF, ρ::F) where {F,VF<:AbstractVector
 
     for i = 0:5
         path_type = DubinsPathType(i)
-        errcode, params = dubins_word(intermediate_results, path_type)
+        errcode, params = dubins_word(intermediate_results, path_type, loop_tol)
         if errcode == EDUBOK
             cost = sum(params)
             if cost < best_cost
@@ -71,6 +71,7 @@ function dubins_path(
     q1::VF,
     ρ::F,
     path_type::DubinsPathType,
+    loop_tol::F = 1e-5
 ) where {F,VF<:AbstractVector{F}}
 
     # input checking
@@ -81,7 +82,7 @@ function dubins_path(
 
     intermediate_results = DubinsIntermediateResults(q0, q1, ρ)
 
-    errcode, params = dubins_word(intermediate_results, path_type)
+    errcode, params = dubins_word(intermediate_results, path_type, loop_tol)
     if errcode == EDUBOK
         path = DubinsPath(q0, params, ρ, path_type)
         return EDUBOK, path
@@ -294,20 +295,21 @@ The function to call the corresponding Dubins path based on the path_type
 function dubins_word(
     intermediate_results::DubinsIntermediateResults{F},
     path_type::DubinsPathType,
+    loop_tol::F
 ) where {F}
 
     if path_type == LSL
-        result, out = dubins_LSL(intermediate_results)
+        result, out = dubins_LSL(intermediate_results, loop_tol)
     elseif path_type == RSL
-        result, out = dubins_RSL(intermediate_results)
+        result, out = dubins_RSL(intermediate_results, loop_tol)
     elseif path_type == LSR
-        result, out = dubins_LSR(intermediate_results)
+        result, out = dubins_LSR(intermediate_results, loop_tol)
     elseif path_type == RSR
-        result, out = dubins_RSR(intermediate_results)
+        result, out = dubins_RSR(intermediate_results, loop_tol)
     elseif path_type == LRL
-        result, out = dubins_LRL(intermediate_results)
+        result, out = dubins_LRL(intermediate_results, loop_tol)
     elseif path_type == RLR
-        result, out = dubins_RLR(intermediate_results)
+        result, out = dubins_RLR(intermediate_results, loop_tol)
     else
         result, out = EDUBNOPATH, SVector{3,F}(0, 0, 0)
     end
