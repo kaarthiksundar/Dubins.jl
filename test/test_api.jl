@@ -7,13 +7,11 @@ end
 @testset "test invalid ρ" begin
     errcode, path = dubins_shortest_path(zeros(3), [1.0, 0.0, 0.0], -1.0)
     @test errcode == EDUBBADRHO
-    # @test path == nothing
 end
 
 @testset "test no path" begin
     errcode, path = dubins_path(zeros(3), [10.0, 0.0, 0.0], 1.0, LRL)
     @test errcode == EDUBNOPATH
-    # @test path == nothing
 end
 
 @testset "test path length" begin
@@ -57,11 +55,9 @@ end
 
     errcode, qsamp = dubins_path_sample(path, -1.0)
     @test errcode == EDUBPARAM
-    # @test qsamp == nothing
 
     errcode, qsamp = dubins_path_sample(path, 5.0; extrapolate = false)
     @test errcode == EDUBPARAM
-    # @test qsamp == nothing
 
     errcode, qsamp = dubins_path_sample(path, 5.0; extrapolate = true)
     @test errcode == EDUBOK
@@ -119,5 +115,4 @@ end
 
     errcode, subpath = dubins_extract_subpath(path, 8.0)
     @test errcode == EDUBPARAM
-    # @test subpath == nothing
 end

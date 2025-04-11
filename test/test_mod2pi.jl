@@ -7,18 +7,5 @@
 
     @test errcode == EDUBOK
 
-    # @show path
-
     @test abs(path.params[3]) < 0.1
 end
-
-
-# @testset "test_mod2pi" begin
-
-#     x = 6.283185303630791
-
-#     @show x
-#     @show mod2pi(x)
-#     # @show Dubins.mymod2pi(x)
-#     @show atan(sin(x), cos(x))
-# end

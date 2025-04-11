@@ -37,13 +37,13 @@ The shortest path between two configurations is computed using the method `dubin
 errcode, path = dubins_shortest_path([0.0, 0.0, 0.], [1., 0.0, 0.], 1.)
 ```
 Here, path is an object of type `DubinsPath`, `[0.0, 0.0, 0.]` is the initial configuration, `[1., 0.0, 0.]` is the final configuration and `1.` is the turn radius of the Dubins vehicle. A configuration is a 3-element vector with the x-coordinate, y-coordinate, and the heading angle.
-The above code would return a non-zero error code in case of any errors. If the error code is non-zero, then `nothing` is returned for the path.
+The above code would return a non-zero error code in case of any errors. If the error code is non-zero, then `[0.0, 0.0, 0.0]` is returned for the path.
 
 A Dubins path of a specific type can be computed using
 ```julia
 errcode, path = dubins_path(zeros(3), [10.0, 0.0, 0.], 1., RSL)
 ```
-where, the last argument is the type of Dubins path; it can take any value in `LSL, LSR, RSL, RSR, RLR, LRL`. Again here, tf the error code is non-zero, then `nothing` is returned for the path.
+where, the last argument is the type of Dubins path; it can take any value in `LSL, LSR, RSL, RSR, RLR, LRL`. Again here, if the error code is non-zero, then `[0.0, 0.0, 0.0]` is returned for the path.
 
 The length of a Dubins path is computed after a function call to `dubins_shortest_path()` or `dubins_path()` as
 ```julia
@@ -66,7 +66,7 @@ errcode, path = dubins_path(zeros(3), [4., 0.0, 0.], 1., LSL)
 
 errcode, subpath = dubins_extract_subpath(path, 2.)
 ```
-The second argument of the function `dubins_extract_subpath()` is a parameter that has to lie in the interval `[0,dubins_path_length(path)]`, failing which the function will return a `EDUBPARAM` error-code and a `nothing` for the path
+The second argument of the function `dubins_extract_subpath()` is a parameter that has to lie in the interval `[0,dubins_path_length(path)]`, failing which the function will return a `EDUBPARAM` error-code and a `[0.0, 0.0, 0.0]` for the path
 
 After extracting a sub-path, the end-point of the sub-path can be queried using the method `dubins_path_endpoint(subpath)`,. This function returns `EDUBOK` on successful completion and a 3-element vector representing the configuration of the end-point of the sub-path.
 
@@ -85,7 +85,7 @@ errcode, qsamp = dubins_path_sample(path, 4.)
 errcode, qsamp = dubins_path_sample(path, 2.)
 # qsamp will take a value [2., 0.0, 0.], the configuration of the vehicle after travelling for 2 units
 ```
-The second argument of the function `dubins_path_sample()` is a parameter that has to lie in the interval `[0,dubins_path_length(path)]`, failing which the function will return a `EDUBPARAM` error-code and `nothing`  
+The second argument of the function `dubins_path_sample()` is a parameter that has to lie in the interval `[0,dubins_path_length(path)]`, failing which the function will return a `EDUBPARAM` error-code and `[0.0, 0.0, 0.0]`  
 
 As one can observe from the above code snippet, `dubins_path_sample()` samples the Dubins path only once. Sampling an entire Dubins path using a step size, can be achieved using the method `dubins_path_sample_many()`. The `dubins_path_sample_many()` takes in two arguments:
 
