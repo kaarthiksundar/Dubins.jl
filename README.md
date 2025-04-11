@@ -3,7 +3,7 @@
 [![Continuous Integration (Unit Tests)][ci-unit-img]][ci-unit-url]  [![Documentation][docs-img]][docs-url]  [![Code Coverage][codecov-img]][codecov-url]                                           
 
 [docs-img]: https://github.com/kaarthiksundar/Dubins.jl/workflows/Documentation/badge.svg "Documentation"
-[docs-url]: https://kaarthiksundar.github.io/Dubins.jl/stable/
+[docs-url]: https://kaarthiksundar.github.io/Dubins.jl/dev/
 [ci-unit-img]: https://github.com/kaarthiksundar/Dubins.jl/actions/workflows/ci.yml/badge.svg?branch=master "Continuous Integration (Unit Tests)"
 [ci-unit-url]: https://github.com/kaarthiksundar/Dubins.jl/actions/workflows/ci.yml
 [codecov-img]: https://codecov.io/gh/kaarthiksundar/Dubins.jl/branch/master/graph/badge.svg "Code Coverage"
