@@ -1,10 +1,8 @@
 using Dubins
-using Memento
 using StaticArrays
-
 using Test
 
-setlevel!(getlogger(Dubins), "error")
+silence!()
 
 
 @testset "Dubins" begin
