@@ -1,9 +1,7 @@
 Dubins.jl Change Log
 ===================
-### v1.2.3
+### v1.2.0
 - Added way to prune loops based on some small user-specified tolerance
-
-### v1.2.2
 - Removed allocations due to non-static vectors and type instability
 
 ### v1.1.3 
